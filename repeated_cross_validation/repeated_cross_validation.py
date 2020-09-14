@@ -153,6 +153,8 @@ def knn(i, k_folds):
 
     k = k_folds.shape[2]
 
+    k_neighbours = 5
+
     training_partitions = training_folds(k,i)
 
     for x in range(len(training_partitions)):
@@ -166,12 +168,12 @@ def knn(i, k_folds):
         for y in range(training_data.shape[0]):
             distances[y,x] = euclidiana(test_data[x,:],training_data[y,:])
 
-    k_nearest_neighbours = np.zeros([k,training_data.shape[1],test_data.shape[0]])
+    k_nearest_neighbours = np.zeros([k_neighbours,training_data.shape[1],test_data.shape[0]])
     k_nearest = np.zeros((distances.shape[0]))
 
     for x in range(distances.shape[1]):
-        for y in range(k):
-                k_nearest = distances[:,x].argsort()[:k]
+        for y in range(k_neighbours):
+                k_nearest = distances[:,x].argsort()[:k_neighbours]
                 k_nearest_neighbours[y,:,x] = training_data[k_nearest[y],:]
 
     predictions = np.zeros((k_nearest_neighbours.shape[2]))
@@ -268,4 +270,4 @@ def repeated_cross_validation(r,k,dataset):
             accuracy[j,i], f1_measure[j,i] = knn(j,k_folds)
     print_table(accuracy, f1_measure)
 
-repeated_cross_validation(5,10,'diabetes.csv')
+repeated_cross_validation(5,3,'diabetes.csv')
